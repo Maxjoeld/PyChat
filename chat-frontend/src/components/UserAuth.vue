@@ -71,8 +71,6 @@
   		signUp () {
         axios.post('http://localhost:8000/auth/users/create/', this._data)
         .then(data => {
-          console.log(data)
-          // this.$router.push('/chats')
           this.signIn()
 
         })
