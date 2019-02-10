@@ -58,7 +58,7 @@
 </template>
 
 <script>
-  const $ = window.jQuery // JQuery
+  // const $ = window.jQuery // JQuery
 
   export default {
 

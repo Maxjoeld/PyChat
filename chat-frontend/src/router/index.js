@@ -22,11 +22,10 @@ const router = new Router({
 
 router.beforeEach((to, from, next) => {
   if (sessionStorage.getItem('authToken') !== null || to.path === '/auth') {
-    next()
+    next();
+  } else {
+    next('/auth');
   }
-} else {
-    next('/auth')
-  }
-})
+});
 
 export default router;
