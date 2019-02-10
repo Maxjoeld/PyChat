@@ -21,10 +21,10 @@
               </div>
               <div class="form-row">
                 <div class="form-group col-md-6">
-                  <input v-model="username" type="text" class="form-control" id="username" placeholder="Username" required>
+                  <input v-model="username" type="text" class="form-control" placeholder="Username" required>
                 </div>
                 <div class="form-group col-md-6">
-                  <input v-model="password" type="password" class="form-control" id="password" placeholder="Password" required>
+                  <input v-model="password" type="password" class="form-control"  placeholder="Password" required>
                 </div>
               </div>
               <div class="form-group">
@@ -42,6 +42,7 @@
           <div class="tab-pane fade" id="signin" role="tabpanel" aria-labelledby="signin-tab">
             <form @submit.prevent="signIn">
               <div class="form-group">
+              <h1>{{username}}</h1>
                 <input v-model="username" type="text" class="form-control" id="username" placeholder="Username" required>
               </div>
               <div class="form-group">
@@ -58,7 +59,7 @@
 </template>
 
 <script>
-  // const $ = window.jQuery // JQuery
+  import axios from 'axios';
 
   export default {
 
@@ -66,9 +67,32 @@
       return {
         email: '', username: '', password: ''
       }
-    }
+		},
+		methods: {
+  		signUp () {
+        axios.post('http://localhost:8000/auth/users/create/', this._data)
+        .then(data => {
+          console.log(data)
+        })
+        .catch(e => console.log(e))
+      },
+  	},
 
-  }
+  		// signIn () {
+  		//   const credentials = {username: this.username, password: this.password}
+
+  		//   axios.post('http://localhost:8000/auth/token/create/', credentials, (data) => {
+  		//     sessionStorage.setItem('authToken', data.auth_token)
+  		//     sessionStorage.setItem('username', this.username)
+  		//     this.$router.push('/chats')
+  		//   })
+  		//   .fail((response) => {
+  		//     alert(response.responseText)
+  		//   })
+			// }
+		// }
+	}
+
 </script>
 
 <style scoped>
