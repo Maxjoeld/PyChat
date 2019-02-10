@@ -5,16 +5,16 @@
       <div class="col-sm-4 offset-sm-4">
         <ul class="nav nav-tabs nav-justified" id="myTab" role="tablist">
           <li class="nav-item">
-            <a class="nav-link active" id="signup-tab" data-toggle="tab" href="#signup" role="tab" aria-controls="signup" aria-selected="true">Sign Up</a>
+            <a class="nav-link " id="signup-tab" data-toggle="tab" href="#signup" role="tab" aria-controls="signup" aria-selected="true">Sign Up</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" id="signin-tab" data-toggle="tab" href="#signin" role="tab" aria-controls="signin" aria-selected="false">Sign In</a>
+            <a class="nav-link active" id="signin-tab" data-toggle="tab" href="#signin" role="tab" aria-controls="signin" aria-selected="false">Sign In</a>
           </li>
         </ul>
 
         <div class="tab-content" id="myTabContent">
 
-          <div class="tab-pane fade show active" id="signup" role="tabpanel" aria-labelledby="signin-tab">
+          <!-- <div class="tab-pane fade show active" id="signup" role="tabpanel" aria-labelledby="signin-tab">
             <form @submit.prevent="signUp">
               <div class="form-group">
                 <input v-model="email" type="email" class="form-control" id="email" placeholder="Email Address" required>
@@ -37,12 +37,11 @@
               </div>
               <button type="submit" class="btn btn-block btn-primary">Sign up</button>
             </form>
-          </div>
+          </div> -->
 
-          <div class="tab-pane fade" id="signin" role="tabpanel" aria-labelledby="signin-tab">
+          <div class="tab-pane active" id="signin" role="tabpanel" aria-labelledby="signin-tab">
             <form @submit.prevent="signIn">
               <div class="form-group">
-              <h1>{{username}}</h1>
                 <input v-model="username" type="text" class="form-control" id="username" placeholder="Username" required>
               </div>
               <div class="form-group">
@@ -60,7 +59,7 @@
 
 <script>
   import axios from 'axios';
-
+  let qs = require('qs')
   export default {
 
     data () {
@@ -73,24 +72,32 @@
         axios.post('http://localhost:8000/auth/users/create/', this._data)
         .then(data => {
           console.log(data)
+          // this.$router.push('/chats')
+          this.signIn()
+
         })
         .catch(e => console.log(e))
       },
-  	},
 
-  		// signIn () {
-  		//   const credentials = {username: this.username, password: this.password}
-
-  		//   axios.post('http://localhost:8000/auth/token/create/', credentials, (data) => {
-  		//     sessionStorage.setItem('authToken', data.auth_token)
-  		//     sessionStorage.setItem('username', this.username)
-  		//     this.$router.push('/chats')
-  		//   })
-  		//   .fail((response) => {
-  		//     alert(response.responseText)
-  		//   })
-			// }
-		// }
+  		signIn () {
+        const formData = new FormData();
+        formData.append('username', `${this.username}`)
+        formData.append('password', `${this.password}`)
+        axios.post('http://localhost:8000/auth/jwt/create/', 
+        formData,
+        { headers: {
+          'Content-type': 'multipart/form-data;boundary="boundary" ',
+        }
+        })
+        .then(res => {
+          console.log(res);
+  		    sessionStorage.setItem('authToken', res.data.access)
+  		    sessionStorage.setItem('username', this.username)
+  		    this.$router.push('/chats')
+        })
+        .catch(e => console.log(e))
+			}
+		}
 	}
 
 </script>
