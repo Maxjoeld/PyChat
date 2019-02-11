@@ -7,9 +7,9 @@ from celery import Celery
 
 
 # set the default Django settings module for the 'celery' program.
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'chatire.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'chatroom.settings')
 
-app = Celery('chatire')
+app = Celery('chatroom')
 app.config_from_object('django.conf:settings', namespace='CELERY')
 
 app.autodiscover_tasks()

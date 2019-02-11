@@ -78,6 +78,7 @@
       },
 
   		signIn () {
+				console.log(this);
         const formData = new FormData();
         formData.append('username', `${this.username}`)
         formData.append('password', `${this.password}`)
