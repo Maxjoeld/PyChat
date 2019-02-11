@@ -6,6 +6,8 @@ from .models import (
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import permissions
+from notifications.signals import notify
+
 
 
 class ChatSessionView(APIView):
@@ -81,7 +83,7 @@ class ChatSessionMessageView(APIView):
         user = request.user
         chat_session = ChatSession.objects.get(uri=uri)
 
-        ChatSessionMessage.objects.create(
+        chat_session_message = ChatSessionMessage.objects.create(
             user=user, chat_session=chat_session, message=message
         )
 
