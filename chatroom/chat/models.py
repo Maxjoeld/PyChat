@@ -7,6 +7,7 @@ from django.contrib.auth import get_user_model
 
 User = get_user_model()
 
+#converts
 def deserialize_user(user):
     """Deserialize user instance to JSON"""
     return {
