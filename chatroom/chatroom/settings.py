@@ -42,8 +42,8 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'corsheaders',
     'djoser',
-    # 'rest_auth',
     'chat',
+    'notifications'
 ]
 
 MIDDLEWARE = [
