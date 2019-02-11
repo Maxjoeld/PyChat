@@ -36,10 +36,10 @@
           </div>
 
           <div class="card-footer text-muted">
-            <form>
+            <form @submit.prevent="postMessage">
               <div class="row">
                 <div class="col-sm-10">
-                  <input type="text" placeholder="Type a message" />
+                  <input v-model="message" type="text" placeholder="Type a message" />
                 </div>
                 <div class="col-sm-2">
                   <button class="btn btn-primary">Send</button>
@@ -71,7 +71,7 @@ const $ = window.jQuery
 export default {
   data () {
     return {
-      sessionStarted: false,
+      sessionStarted: false, messages: [], message: '',
       messages: [
         {"status":"SUCCESS","uri":"040213b14a02451","message":"Hello!","user":{"id":1,"username":"danidee","email":"osaetindaniel@gmail.com","first_name":"","last_name":""}},
         {"status":"SUCCESS","uri":"040213b14a02451","message":"Hey whatsup! i dey","user":{"id":2,"username":"daniel","email":"","first_name":"","last_name":""}}
@@ -88,6 +88,11 @@ export default {
         'Authorization': `Bearer ${sessionStorage.getItem('authToken')}`
       }
     })
+
+    if (this.$route.params.uri) {
+      this.joinChatSession()
+    }
+    setInterval(this.fetchChatSessionHistory, 3000)
   },
 
   methods: {
@@ -100,7 +105,42 @@ export default {
       .fail((response) => {
         alert(response.responseText)
       })
-    }
+    },
+    postMessage (event) {
+      const data = {message: this.message}
+
+      $.post(`http://localhost:8000/api/chats/${this.$route.params.uri}/messages/`, data, (data) => {
+        this.messages.push(data)
+        this.message = '' // clear the message after sending
+      })
+      .fail((response) => {
+        alert(response.responseText)
+      })
+    },
+    joinChatSession () {
+      const uri = this.$route.params.uri
+
+      $.ajax({
+        url: `http://localhost:8000/api/chats/${uri}/`,
+        data: {username: this.username},
+        type: 'PATCH',
+        success: (data) => {
+          const user = data.members.find((member) => member.username === this.username)
+
+          if (user) {
+            // The user belongs/has joined the session
+            this.sessionStarted = true
+            this.fetchChatSessionHistory()
+          }
+        }
+      })
+    },
+
+    fetchChatSessionHistory () {
+      $.get(`http://127.0.0.1:8000/api/chats/${this.$route.params.uri}/messages/`, (data) => {
+        this.messages = data.messages
+      })
+    },
   }
 }
 </script>
