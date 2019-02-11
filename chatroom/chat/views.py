@@ -13,13 +13,12 @@ class ChatSessionView(APIView):
     # Permission checks will typically use the authentication information in the request.user 
     # and request.auth properties to determine if the incoming request should be permitted.
     permission_classes = (permissions.IsAuthenticated,)
-
     def post(self, request, *args, **kargs):
         """Create a new chat session"""
+        
         user = request.user
         #creates new instance of chatSessions
         chat_session = ChatSession.objects.create(owner=user)
-
         return Response({
             'status': 'SUCCESS', 'uri': chat_session.uri,
             'message': 'New chat session created'
